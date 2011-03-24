@@ -1,46 +1,72 @@
-import java.util.Timer;
+import java.util.TooManyListenersException;
 
 
 public class TransportLayer {
 	
-	ApplicationLayer application = new ApplicationLayer();
-	NetworkLayer network = new NetworkLayer();
+	ApplicationLayer application = null;
+	NetworkLayer network = null;
 	
-	int senderState = 0;
-	int receiverState = 0;
+	public String ACK = "1";
+	
+	int senderState, receiverState = 0;
 	
 	long ts = 0;
 	long timeout = 1000;
 	
-	public void Sender(String data) {
-		switch(senderState) {
-			case 0:
-				network.Sender("0" + data);
-				ts = System.currentTimeMillis();
-				senderState = 1;
-				break;
-			case 1:
-				if ((System.currentTimeMillis()-ts) > timeout) {
+	boolean msgAcked = false;
+	
+	public TransportLayer(ApplicationLayer appL) throws TooManyListenersException {
+		application = appL;
+		network = new NetworkLayer(this);
+		
+		senderState = 0;
+		receiverState = 0;
+		
+		ts = 0;
+		timeout = 1000;
+	}
+	
+	public void Sender(String data) throws InterruptedException {
+		do {
+			switch(senderState) {
+				case 0:
 					network.Sender("0" + data);
 					ts = System.currentTimeMillis();
 					senderState = 1;
-				}
-				// else if ack = 0, state 2
-				break;
-			case 2:
-				network.Sender("1" + data);
-				ts = System.currentTimeMillis();
-				senderState = 3;
-				break;
-			case 3:
-				if ((System.currentTimeMillis()-ts) > timeout) {
+					msgAcked = false;
+					break;
+				case 1:
+					if ((System.currentTimeMillis()-ts) > timeout) {
+						network.Sender("0" + data);
+						ts = System.currentTimeMillis();
+						senderState = 1;
+						msgAcked = false;
+					} else if (ACK.equals("0")) {
+						senderState = 2;
+						msgAcked = true;
+					}
+					break;
+				case 2:
 					network.Sender("1" + data);
 					ts = System.currentTimeMillis();
 					senderState = 3;
-				}
-				// else if ack = 1, state 0
-				break;
-		}
+					msgAcked = false;
+					break;
+				case 3:
+					if ((System.currentTimeMillis()-ts) > timeout) {
+						network.Sender("1" + data);
+						ts = System.currentTimeMillis();
+						senderState = 3;
+						msgAcked = true;
+					} else if (ACK.equals("1")) {
+						senderState = 0;
+						msgAcked = false;
+					}
+					break;
+			}
+			System.out.println(senderState);
+			Thread.sleep(500);
+		} while(!msgAcked);
 	}
 	
 	public void receiver(String data) {

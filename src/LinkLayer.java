@@ -1,17 +1,31 @@
+import java.util.TooManyListenersException;
+
 
 public class LinkLayer {
 
-	PhysicalLayer physical = new PhysicalLayer();
-	NetworkLayer network = new NetworkLayer();
+	PhysicalLayer physical = null;
+	NetworkLayer network = null;
 	
-	String SoF = "%S";
-	String EoF = "%E";
+	String SoF, EoF = null;
 	
 	int receiverState = 0;
 	
+	public LinkLayer(NetworkLayer netL) throws TooManyListenersException {
+		
+		//physical = new PhysicalLayer("/dev/ttyUSB0", this);
+		network = netL;
+		
+		SoF = "%S";
+		EoF = "%E";
+		
+		receiverState = 0;
+		
+	}
+	
 	public void Sender(String data) {
 		String checksum = Checksum(data);
-		physical.Sender(checksum + data);
+		physical.transmit(checksum + data);
+		physical.closePort();
 	}
 	
 	public void receiver(String data) {

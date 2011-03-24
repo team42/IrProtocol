@@ -1,11 +1,19 @@
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.TooManyListenersException;
 
 
 public class NetworkLayer {
 
-	LinkLayer link = new LinkLayer();
-	TransportLayer transport = new TransportLayer();
+	LinkLayer link = null;
+	TransportLayer transport = null;
+	
+	public NetworkLayer(TransportLayer transp) throws TooManyListenersException {
+		
+		link = new LinkLayer(this);
+		transport = transp;
+		
+	}
 	
 	public void Sender(String data) {
 		String localIP = "";
