@@ -8,11 +8,14 @@ public class NetworkLayer {
 	LinkLayer link = null;
 	TransportLayer transport = null;
 	
-	public NetworkLayer(TransportLayer transp) throws TooManyListenersException {
-		
-		link = new LinkLayer(this);
+	public NetworkLayer(String port, TransportLayer transp) throws TooManyListenersException {
 		transport = transp;
-		
+		link = new LinkLayer(port, this);
+	}
+	
+	public NetworkLayer(LinkLayer linkL) throws TooManyListenersException {
+		link = linkL;
+		transport = new TransportLayer(this);
 	}
 	
 	public void Sender(String data) {
@@ -50,11 +53,11 @@ public class NetworkLayer {
 		
 		senderIP = data.substring(2, 2+IPlength);
 		
-		System.out.println(data);
-		System.out.println(IPlength);
-		System.out.println(senderIP);
-		System.out.println(data.substring(2+IPlength));
-		System.out.println("\n" + localIP);
+		System.out.println("Full Data: " + data);
+		System.out.println("IP length: " + IPlength);
+		System.out.println("Sender IP: " + senderIP);
+		System.out.println("Data: " + data.substring(2+IPlength));
+		System.out.println("Local IP: " + localIP);
 		
 		if(!senderIP.equals(localIP)) {
 			transport.receiver(data.substring(2+IPlength));

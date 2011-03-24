@@ -19,6 +19,8 @@ public class PhysicalLayer implements SerialPortEventListener {
    private static OutputStream         outputStream;
    private static InputStream          inputStream;
    private LinkLayer link = null;
+   Timer timer;
+   String inputStr = null;
 
    /**
     * Constructs a new SerialFrame instance and opens the port given in the
@@ -31,39 +33,46 @@ public class PhysicalLayer implements SerialPortEventListener {
     * @param port The port to use for communication (COM1, /dev/ttyUSB0, etc.)
     * @throws java.util.TooManyListenersException
     */
-   //public PhysicalLayer(String port, LinkLayer linkL) throws TooManyListenersException {
+   public PhysicalLayer(String port, LinkLayer linkL) throws TooManyListenersException {
+	   link = linkL;
+	   initPort(port);
+   }
+   
    public PhysicalLayer(String port) throws TooManyListenersException {
-      
-	  //link = linkL;
-	   
-	  portList = CommPortIdentifier.getPortIdentifiers();
-      while (portList.hasMoreElements()) {
-         portId = (CommPortIdentifier) portList.nextElement();
-         if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-            if (portId.getName().equals(port)) {
-               try {
-                  serialPort = (SerialPort) portId.open("", 2000);
-                  serialPort.setSerialPortParams(
-                        BAUDRATE,
-                        SerialPort.DATABITS_8,
-                        SerialPort.STOPBITS_1,
-                        SerialPort.PARITY_NONE);
-                  serialPort.addEventListener(this); // Add event listener so we can react to data on the port
-                  serialPort.notifyOnDataAvailable(true); // React on data available
-                  //serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN | SerialPort.FLOWCONTROL_XONXOFF_OUT);
-                  //serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
-                  //serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-                  inputStream = serialPort.getInputStream();
-               } catch (PortInUseException e) {
-                  e.printStackTrace();
-               } catch (IOException e) {
-                  e.printStackTrace();
-               } catch (UnsupportedCommOperationException e) {
-                  e.printStackTrace();
-               }
-            }
-         }
-      }
+	   initPort(port);
+	   link = new LinkLayer(this);
+   }
+   
+   
+   public void initPort(String port) throws TooManyListenersException {
+	   portList = CommPortIdentifier.getPortIdentifiers();
+	      while (portList.hasMoreElements()) {
+	         portId = (CommPortIdentifier) portList.nextElement();
+	         if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+	            if (portId.getName().equals(port)) {
+	               try {
+	                  serialPort = (SerialPort) portId.open("", 2000);
+	                  serialPort.setSerialPortParams(
+	                        BAUDRATE,
+	                        SerialPort.DATABITS_8,
+	                        SerialPort.STOPBITS_1,
+	                        SerialPort.PARITY_NONE);
+	                  serialPort.addEventListener(this); // Add event listener so we can react to data on the port
+	                  serialPort.notifyOnDataAvailable(true); // React on data available
+	                  //serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN | SerialPort.FLOWCONTROL_XONXOFF_OUT);
+	                  //serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
+	                  //serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
+	                  inputStream = serialPort.getInputStream();
+	               } catch (PortInUseException e) {
+	                  e.printStackTrace();
+	               } catch (IOException e) {
+	                  e.printStackTrace();
+	               } catch (UnsupportedCommOperationException e) {
+	                  e.printStackTrace();
+	               }
+	            }
+	         }
+	      }
    }
 
 
@@ -85,9 +94,11 @@ public class PhysicalLayer implements SerialPortEventListener {
                   while (inputStream.available() > 0) {
                      inputStream.read(readBuffer);
 
-                     //link.receiver(new String(new byte[] {readBuffer[0]}));
-                     System.out.print(new String(new byte[] {readBuffer[0]})); // System.out is too slow
-                     //System.out.println(new String(new byte[] {readBuffer[0]})); // System.out is too slow
+                     inputStr = new String(new byte[] {readBuffer[0]});
+                     
+                     if((inputStr == null) || (inputStr.length() == 0)) {
+                    	 link.receiver(inputStr);
+                     }
                   }
                } catch (IOException e) {
                   e.printStackTrace();
@@ -109,18 +120,25 @@ public class PhysicalLayer implements SerialPortEventListener {
    public synchronized void transmit(String data) {
 
       //Debug output
-      System.out.println("Transmit: " + data + "\n]");
-      try {
-         outputStream = serialPort.getOutputStream();
-         outputStream.write(data.getBytes());
-         outputStream.write(10); // Binary Terminator (\n = 10)
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
+	   if((data != null) && (data.length() > 0)) {
+	      System.out.println("Transmit: " + data + "\n]");
+	   }
+	   try {
+	      outputStream = serialPort.getOutputStream();
+	      outputStream.write(data.getBytes());
+	      outputStream.write(10); // Binary Terminator (\n = 10)
+	   } catch (IOException e) {
+	      e.printStackTrace();
+	   }
    }
 
    public void closePort() {
       serialPort.close();
    }
-
+   
+   class keepAlive extends TimerTask {
+	   public void run() {
+		   transmit("hejmeddig");
+	   }
+   }
 }

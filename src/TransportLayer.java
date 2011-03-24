@@ -8,25 +8,25 @@ public class TransportLayer {
 	
 	public String ACK = "1";
 	
-	int senderState, receiverState = 0;
+	int senderState = 0; 
+	int receiverState = 0;
 	
 	long ts = 0;
 	long timeout = 1000;
 	
 	boolean msgAcked = false;
 	
-	public TransportLayer(ApplicationLayer appL) throws TooManyListenersException {
+	public TransportLayer(String port, ApplicationLayer appL) throws TooManyListenersException {
 		application = appL;
-		network = new NetworkLayer(this);
-		
-		senderState = 0;
-		receiverState = 0;
-		
-		ts = 0;
-		timeout = 1000;
+		network = new NetworkLayer(port, this);
 	}
 	
-	public void Sender(String data) throws InterruptedException {
+	public TransportLayer(NetworkLayer netL) throws TooManyListenersException {
+		network = netL;
+		application = new ApplicationLayer();
+	}
+	
+	public void Sender(String data) {
 		do {
 			switch(senderState) {
 				case 0:
@@ -64,8 +64,6 @@ public class TransportLayer {
 					}
 					break;
 			}
-			System.out.println(senderState);
-			Thread.sleep(500);
 		} while(!msgAcked);
 	}
 	
@@ -76,6 +74,12 @@ public class TransportLayer {
 				network.Sender("ACK0");
 				application.receiver(data.substring(1));
 				receiverState = 1;
+			} else if (data.equals("ACK1")){
+				ACK = "1";
+				network.Sender("ACK1");
+			} else if (data.equals("ACK0")) {
+				ACK = "1";
+				network.Sender("ACK1");
 			} else {
 				network.Sender("ACK1");
 			}
@@ -85,6 +89,12 @@ public class TransportLayer {
 				network.Sender("ACK1");
 				application.receiver(data.substring(1));
 				receiverState = 0;
+			} else if (data.equals("ACK1")){
+				ACK = "1";
+				network.Sender("ACK0");
+			} else if (data.equals("ACK0")) {
+				ACK = "1";
+				network.Sender("ACK0");
 			} else {
 				network.Sender("ACK0");
 			}
