@@ -1,3 +1,5 @@
+package IrProtocol;
+
 import java.io.*;
 import java.util.*;
 import gnu.io.*;
@@ -19,8 +21,8 @@ public class PhysicalLayer implements SerialPortEventListener {
    private static OutputStream         outputStream;
    private static InputStream          inputStream;
    private LinkLayer link = null;
+   private String inputStr = null;
    Timer timer;
-   String inputStr = null;
 
    /**
     * Constructs a new SerialFrame instance and opens the port given in the
@@ -36,43 +38,45 @@ public class PhysicalLayer implements SerialPortEventListener {
    public PhysicalLayer(String port, LinkLayer linkL) throws TooManyListenersException {
 	   link = linkL;
 	   initPort(port);
+	   
+	   timer = new Timer();
+	   timer.schedule(new keepAlive(), 0, 4000);
    }
    
    public PhysicalLayer(String port) throws TooManyListenersException {
 	   initPort(port);
 	   link = new LinkLayer(this);
+	   
+	   timer = new Timer();
+	   timer.schedule(new keepAlive(), 0, 4000);
    }
    
    
    public void initPort(String port) throws TooManyListenersException {
 	   portList = CommPortIdentifier.getPortIdentifiers();
-	      while (portList.hasMoreElements()) {
-	         portId = (CommPortIdentifier) portList.nextElement();
-	         if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-	            if (portId.getName().equals(port)) {
-	               try {
-	                  serialPort = (SerialPort) portId.open("", 2000);
-	                  serialPort.setSerialPortParams(
-	                        BAUDRATE,
-	                        SerialPort.DATABITS_8,
-	                        SerialPort.STOPBITS_1,
-	                        SerialPort.PARITY_NONE);
-	                  serialPort.addEventListener(this); // Add event listener so we can react to data on the port
-	                  serialPort.notifyOnDataAvailable(true); // React on data available
-	                  //serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN | SerialPort.FLOWCONTROL_XONXOFF_OUT);
-	                  //serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
-	                  //serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-	                  inputStream = serialPort.getInputStream();
-	               } catch (PortInUseException e) {
-	                  e.printStackTrace();
-	               } catch (IOException e) {
-	                  e.printStackTrace();
-	               } catch (UnsupportedCommOperationException e) {
-	                  e.printStackTrace();
-	               }
+	   while (portList.hasMoreElements()) {
+	      portId = (CommPortIdentifier) portList.nextElement();
+	      if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+	         if (portId.getName().equals(port)) {
+	            try {
+	               serialPort = (SerialPort) portId.open("", 2000);
+	               serialPort.setSerialPortParams(BAUDRATE,
+	                     SerialPort.DATABITS_8,
+	                     SerialPort.STOPBITS_1,
+	                     SerialPort.PARITY_NONE);
+	               serialPort.addEventListener(this); // Add event listener so we can react to data on the port
+	               serialPort.notifyOnDataAvailable(true); // React on data available
+	               inputStream = serialPort.getInputStream();
+	            } catch (PortInUseException e) {
+	               e.printStackTrace();
+	            } catch (IOException e) {
+	               e.printStackTrace();
+	            } catch (UnsupportedCommOperationException e) {
+	               e.printStackTrace();
 	            }
 	         }
 	      }
+	   }
    }
 
 
@@ -96,9 +100,8 @@ public class PhysicalLayer implements SerialPortEventListener {
 
                      inputStr = new String(new byte[] {readBuffer[0]});
                      
-                     if((inputStr == null) || (inputStr.length() == 0)) {
-                    	 link.receiver(inputStr);
-                     }
+                     link.receiver(inputStr);
+                     
                   }
                } catch (IOException e) {
                   e.printStackTrace();
@@ -121,7 +124,7 @@ public class PhysicalLayer implements SerialPortEventListener {
 
       //Debug output
 	   if((data != null) && (data.length() > 0)) {
-	      System.out.println("Transmit: " + data + "\n]");
+	      System.out.println("Transmit: " + data);
 	   }
 	   try {
 	      outputStream = serialPort.getOutputStream();
@@ -136,9 +139,9 @@ public class PhysicalLayer implements SerialPortEventListener {
       serialPort.close();
    }
    
-   class keepAlive extends TimerTask {
-	   public void run() {
-		   transmit("hejmeddig");
-	   }
-   }
+	class keepAlive extends TimerTask  {
+	    public void run (  )   {
+	      transmit("");
+	    }
+	}
 }

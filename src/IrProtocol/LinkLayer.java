@@ -1,8 +1,8 @@
+package IrProtocol;
+
 import java.util.TooManyListenersException;
 
-
 public class LinkLayer {
-
 	PhysicalLayer physical = null;
 	NetworkLayer network = null;
 	
@@ -21,7 +21,7 @@ public class LinkLayer {
 	}
 	
 	public void Sender(String data) {
-		String checksum = Checksum(data);
+		String checksum = Checksum(data, true);
 		physical.transmit("%S" + checksum + data + "%E");
 	}
 	
@@ -42,7 +42,7 @@ public class LinkLayer {
 				if(checksumSize == 0) {
 					reChecksum = data;
 					checksumSize++;
-				} else if(checksumSize == 8) {
+				} else if(checksumSize == 2) {
 					buffer = data;
 					receiverState = 3;
 					checksumSize = 0;
@@ -60,23 +60,40 @@ public class LinkLayer {
 				break;
 			case 4:
 				if (data.equals("E")) {
-					System.out.println("End of Frame!!");
-					upChecksum = Checksum(buffer);
-					if (upChecksum.equals(reChecksum)) {
+					upChecksum = Checksum(buffer, false);
+					
+					int cs1 = Integer.parseInt(reChecksum, 16);
+					int cs2 = Integer.parseInt(upChecksum, 16);
+					
+					if((cs1 & cs2) == 0) {
 						network.receiver(buffer);
 					}
 					receiverState = 0;
 				} else if (data.equals("S")) {
-					System.out.println("Start of Frame!!");
 					receiverState = 2;
 				}
 				break;
 		}
 	}
 	
-	private String Checksum(String data) {
-		String checksum = "checksum";
-		
-		return checksum;
+	private String Checksum(String data, boolean sender) {
+	    
+		byte buf[] = data.getBytes(); 
+
+		long sum = 0;
+	    
+	    for(int i=0; i < buf.length; i++) {
+	    	sum += buf[i];
+	    }
+	    
+	    while (sum > 255) {
+	    	sum = (sum & 0xFF) + (sum >> 8);
+	    }
+	    
+	    if(sender) {
+	    	sum = (~sum) & 0xFF;
+	    }
+	    
+	    return Long.toHexString(sum);
 	}
 }

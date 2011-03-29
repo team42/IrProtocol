@@ -1,21 +1,26 @@
+package IrProtocol;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.TooManyListenersException;
 
-
 public class NetworkLayer {
 
 	LinkLayer link = null;
-	TransportLayer transport = null;
+	TransportLayerSender transportSe = null;
+	TransportLayerReceiver transportRe = null;
 	
-	public NetworkLayer(String port, TransportLayer transp) throws TooManyListenersException {
-		transport = transp;
+	boolean sender = false;
+	
+	public NetworkLayer(String port, TransportLayerSender transp) throws TooManyListenersException {
+		transportSe = transp;
 		link = new LinkLayer(port, this);
+		sender = true;
 	}
 	
 	public NetworkLayer(LinkLayer linkL) throws TooManyListenersException {
 		link = linkL;
-		transport = new TransportLayer(this);
+		transportRe = new TransportLayerReceiver(this);
+		sender = false;
 	}
 	
 	public void Sender(String data) {
@@ -53,15 +58,12 @@ public class NetworkLayer {
 		
 		senderIP = data.substring(2, 2+IPlength);
 		
-		System.out.println("Full Data: " + data);
-		System.out.println("IP length: " + IPlength);
-		System.out.println("Sender IP: " + senderIP);
-		System.out.println("Data: " + data.substring(2+IPlength));
-		System.out.println("Local IP: " + localIP);
-		
 		if(!senderIP.equals(localIP)) {
-			transport.receiver(data.substring(2+IPlength));
-			System.out.println("data sent!");
+			if(sender) {
+				transportSe.receiver(data.substring(2+IPlength));
+			} else {
+				transportRe.receiver(data.substring(2+IPlength));
+			}
 		}
 	}
 }
