@@ -1,3 +1,4 @@
+package GUI;
 import javax.swing.*;
 
 import IrProtocol.ApplicationLayer;
@@ -26,21 +27,15 @@ public class SteeringWheelGUI extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == 38) {
 					appLayer.Sender("UP");
-					//Send UP
 					//Change UP Icon
-					//System.out.println("UP");
 				}
 				if(e.getKeyCode() == 40) {
 					appLayer.Sender("DW");
-					//Send DW
 					//Change DW Icon
-					//System.out.println("DW");
 				}
 				if(e.getKeyCode() == 17) {
 					appLayer.Sender("OK");
-					//Send OK
 					//Change OK Icon
-					//System.out.println("OK");
 				}
 			}
 			public void keyReleased(KeyEvent e) {
