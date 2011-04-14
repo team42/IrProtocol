@@ -1,4 +1,11 @@
 package GUI;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.GroupLayout;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import java.awt.Color;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -43,31 +50,42 @@ public class TaxiModuleGUI extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.darkGray));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout gl_jPanel1 = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(gl_jPanel1);
+        gl_jPanel1.setHorizontalGroup(
+            gl_jPanel1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 582, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        gl_jPanel1.setVerticalGroup(
+            gl_jPanel1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 487, Short.MAX_VALUE)
         );
 
         jPanel2.setBackground(new java.awt.Color(0, 255, 51));
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.lightGray, java.awt.Color.black, java.awt.Color.darkGray));
         jPanel2.setPreferredSize(new java.awt.Dimension(200, 100));
+        
+        JLabel lblFree = new JLabel("FREE");
+        lblFree.setForeground(Color.WHITE);
+        lblFree.setFont(new Font("Dialog", Font.BOLD, 36));
+        lblFree.setHorizontalAlignment(SwingConstants.CENTER);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 196, Short.MAX_VALUE)
+        javax.swing.GroupLayout gl_jPanel2 = new javax.swing.GroupLayout(jPanel2);
+        gl_jPanel2.setHorizontalGroup(
+        	gl_jPanel2.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_jPanel2.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(lblFree, GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+        			.addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 96, Short.MAX_VALUE)
+        gl_jPanel2.setVerticalGroup(
+        	gl_jPanel2.createParallelGroup(Alignment.LEADING)
+        		.addGroup(Alignment.TRAILING, gl_jPanel2.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(lblFree, GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
+        			.addContainerGap())
         );
+        jPanel2.setLayout(gl_jPanel2);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("GPS osv");
@@ -75,42 +93,43 @@ public class TaxiModuleGUI extends javax.swing.JFrame {
 
         jButton1.setText("Change GPS Coordinates");
 
-        javax.swing.GroupLayout taxiMenuCanvas1Layout = new javax.swing.GroupLayout(taxiMenuCanvas1);
-        taxiMenuCanvas1.setLayout(taxiMenuCanvas1Layout);
-        taxiMenuCanvas1Layout.setHorizontalGroup(
-            taxiMenuCanvas1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout gl_taxiMenuCanvas1 = new javax.swing.GroupLayout(taxiMenuCanvas1);
+        taxiMenuCanvas1.setLayout(gl_taxiMenuCanvas1);
+        gl_taxiMenuCanvas1.setHorizontalGroup(
+            gl_taxiMenuCanvas1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 200, Short.MAX_VALUE)
         );
-        taxiMenuCanvas1Layout.setVerticalGroup(
-            taxiMenuCanvas1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        gl_taxiMenuCanvas1.setVerticalGroup(
+            gl_taxiMenuCanvas1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 230, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(taxiMenuCanvas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)))
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        				.addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+        				.addComponent(jLabel1, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+        				.addComponent(taxiMenuCanvas1, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+        				.addComponent(jButton1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        			.addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(taxiMenuCanvas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(jButton1)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(taxiMenuCanvas1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        		.addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
         );
+        getContentPane().setLayout(layout);
 
         pack();
     }// </editor-fold>
@@ -124,6 +143,4 @@ public class TaxiModuleGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    // End of variables declaration
-
 }

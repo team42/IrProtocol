@@ -16,7 +16,7 @@ public class SteeringWheelGUI extends JFrame {
 
 	public SteeringWheelGUI() throws TooManyListenersException {
 		
-		final ApplicationLayer appLayer = new ApplicationLayer("COM11");
+		final ApplicationLayer appLayer = new ApplicationLayer("/dev/ttyUSB0");
 		
 		JPanel canvas = new JPanel ();
 		add (canvas, "Center");

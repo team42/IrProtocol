@@ -36,8 +36,8 @@ public class PhysicalLayer implements SerialPortEventListener {
     * @throws java.util.TooManyListenersException
     */
    public PhysicalLayer(String port, LinkLayer linkL) throws TooManyListenersException {
-	   link = linkL;
 	   initPort(port);
+	   link = linkL;
 	   
 	   timer = new Timer();
 	   timer.schedule(new keepAlive(), 0, 4000);
@@ -99,7 +99,6 @@ public class PhysicalLayer implements SerialPortEventListener {
                      inputStream.read(readBuffer);
 
                      inputStr = new String(new byte[] {readBuffer[0]});
-                     
                      link.receiver(inputStr);
                      
                   }

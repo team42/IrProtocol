@@ -1,29 +1,46 @@
 package IrProtocol;
 import java.util.TooManyListenersException;
 
+/**
+ * TransportLayerReceiver
+ * 
+ * Handles the receiver side og reliability
+ * 
+ * @author Nicolai Sonne
+ *
+ */
 
 public class TransportLayerReceiver {
 	
+	// Neighbor Layers
 	ApplicationLayer application = null;
 	NetworkLayer network = null;
 	
-	public String ACK = "1";
-	
-	int senderState = 0; 
+	// State of the receiver method 
 	int receiverState = 0;
 	
-	byte hej = 4;
-	
-	long ts = 0;
-	long timeout = 1000;
-	
-	boolean msgAcked = false;
-	
+	/**
+	 * Constructor
+	 * 
+	 * Set network layer to the initializing layer
+	 * Create new application layer
+	 * 
+	 * @param netL- network layer of the initializer
+	 * @throws TooManyListenersException
+	 */
 	public TransportLayerReceiver(NetworkLayer netL) throws TooManyListenersException {
 		network = netL;
 		application = new ApplicationLayer();
 	}
 	
+	/**
+	 * Receiver
+	 * 
+	 * Sends data to the application layer or discard it depending on the sequence number.
+	 * Also sends the appropriate ack back to the sender.
+	 * 
+	 * @param data - Data received
+	 */
 	public void receiver(String data) {
 		switch(receiverState) {
 		case 0:
