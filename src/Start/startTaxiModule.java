@@ -1,14 +1,12 @@
-package Main;
+package Start;
 
 import java.util.TooManyListenersException;
 import IrProtocol.*;
 
-public class Main {
+public class startTaxiModule {
 
 	public static void main(String[] args) throws TooManyListenersException, InterruptedException {
-		
-		//PhysicalLayer phy = new PhysicalLayer("/dev/ttyUSB0");
+		PhysicalLayer phy = new PhysicalLayer("/dev/ttyUSB0");
 		System.out.println("Receiver Started!");
-		
 	}
 }

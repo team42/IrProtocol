@@ -4,9 +4,11 @@ package GUI;
  * and open the template in the editor.
  */
 
-
 import java.awt.Graphics;
+import java.util.ArrayList;
 import javax.swing.JPanel;
+
+import Model.TripLockedTime;
 
 //* @author Nicolai
  
@@ -48,7 +50,12 @@ public class TaxiMenuCanvas extends JPanel {
     }
 
     public void OK() {
-        taxiMenu.OK();
+        //taxiMenu.OK();
         repaint();
+    }
+    
+    public void setTripList(ArrayList<TripLockedTime> tripList) {
+    	taxiMenu.setTripList(tripList);
+    	repaint();
     }
 }
