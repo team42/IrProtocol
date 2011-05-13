@@ -20,8 +20,8 @@ public class TaxiSide {
 	
 	Timer timer;
 	
-	String TaxiID = "A01";
-	String Coords = "55.55;22.22";
+	String TaxiID = "A00001";
+	String Coords = "9999,9999";
 	
 	TaxiModuleGUI tmGUI = null; 
 	
@@ -32,8 +32,8 @@ public class TaxiSide {
 		this.tmGUI = tmGUI;
 		
 		try {
-			host = InetAddress.getLocalHost();
-			//host = InetAddress.getByAddress(address);
+			//host = InetAddress.getLocalHost();
+			host = InetAddress.getByAddress(address);
 		} catch(UnknownHostException uhEx) {
 			System.out.println("Host ID not found!");
 			System.exit(1);
@@ -62,9 +62,29 @@ public class TaxiSide {
 			datagramSocket.receive(inPacket);
 			response = new String(inPacket.getData(),0,inPacket.getLength());
 			
-			// set table;
+			int accepted;
+			String time, coords;
 			
-			System.out.println("Table: " + response);
+			TripLockedTime curTrip = null;
+			
+			tripList.clear();
+			
+			String[] trips = response.split("%");
+			
+			if(trips.length > 0 && trips[0].length() > 15) {
+				for(int i=0; i<trips.length; i++) {
+					tripID = trips[i].substring(0, 10);
+					accepted = Integer.parseInt(trips[i].substring(10, 11));
+					time = trips[i].substring(11, 16);
+					coords = trips[i].substring(16);
+					
+					curTrip = new TripLockedTime(tripID, accepted, time, coords);
+					
+					tripList.add(curTrip);
+				}
+			}
+			
+			tmGUI.taxiCanvas.setTripList(tripList);
 			
 		} catch(IOException ioEx) {
 			ioEx.printStackTrace();
@@ -72,6 +92,7 @@ public class TaxiSide {
 			datagramSocket.close();
 		}
 		
+		timer = new Timer();
 		timer.schedule(new updateTable(), 5000, 5000);
 	}
 	
@@ -80,6 +101,8 @@ public class TaxiSide {
 			datagramSocket = new DatagramSocket();
 			
 			String message = TaxiID + Coords + "0";
+			
+			//System.out.println(message);
 			
 			outPacket = new DatagramPacket(message.getBytes(), message.length(), host, PORT);
 			datagramSocket.send(outPacket);
@@ -91,8 +114,6 @@ public class TaxiSide {
 			datagramSocket.receive(inPacket);
 			response = new String(inPacket.getData(),0,inPacket.getLength());
 			
-			int begin = 0;
-			
 			int accepted;
 			String tripID, time, coords;
 			
@@ -100,22 +121,24 @@ public class TaxiSide {
 			
 			tripList.clear();
 			
-			for(int i=1;i<response.length();i++) {
-				if(response.charAt(i) == '%') {
-					
-					tripID = response.substring(begin, begin+3);
-					accepted = Integer.parseInt(response.substring(begin+3, begin+4));
-					time = response.substring(begin+4, begin+9);
-					coords = response.substring(begin+9, i);
+			String[] trips = response.split("%");
+			
+			if(trips.length > 0 && trips[0].length() > 15) {
+				for(int i=0; i<trips.length; i++) {
+					System.out.println("length: " + trips.length);
+					System.out.println("Trip " + i + ": " + trips[i]);
+					tripID = trips[i].substring(0, 10);
+					accepted = Integer.parseInt(trips[i].substring(10, 11));
+					time = trips[i].substring(11, 16);
+					coords = trips[i].substring(16);
 					
 					curTrip = new TripLockedTime(tripID, accepted, time, coords);
 					
 					tripList.add(curTrip);
-					begin = i+1;
 				}
 			}
 			
-			tmGUI.taxiMenuCanvas1.setTripList(tripList);
+			tmGUI.taxiCanvas.setTripList(tripList);
 			
 		} catch(IOException ioEx) {
 			ioEx.printStackTrace();

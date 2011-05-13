@@ -48,11 +48,6 @@ public class TaxiMenuCanvas extends JPanel {
         taxiMenu.Down();
         repaint();
     }
-
-    public void OK() {
-        //taxiMenu.OK();
-        repaint();
-    }
     
     public void setTripList(ArrayList<TripLockedTime> tripList) {
     	taxiMenu.setTripList(tripList);

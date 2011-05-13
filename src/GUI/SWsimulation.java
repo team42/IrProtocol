@@ -26,17 +26,24 @@ public class SWsimulation extends JFrame {
 		canvas.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == 38) {
-					System.out.println("hej1");
-					tmGUI.taxiMenuCanvas1.UP();
+					tmGUI.taxiCanvas.UP();
 				}
 				if(e.getKeyCode() == 40) {
-					System.out.println("hej2");
-					tmGUI.taxiMenuCanvas1.DW();
+					tmGUI.taxiCanvas.DW();
 				}
-				if(e.getKeyCode() == 17) {
-					System.out.println("hej3");
-					tmGUI.taxiMenuCanvas1.OK();
+				// Enter
+				if(e.getKeyCode() == 10) {
+					tmGUI.Accept();
 				}
+				// Backspace
+				if(e.getKeyCode() == 8) {
+					tmGUI.Decline();
+				}
+				// Space
+				if(e.getKeyCode() == 32) {
+					tmGUI.OK();
+				}
+				
 			} 
 		});
 		

@@ -25,10 +25,13 @@ public class TaxiMenu {
     	
     	TripLockedTime curTrip = null;
     	
+    	/*
     	for (int i = 0; i < tripLIST.size(); i++) {
     		curTrip = tripLIST.get(i);
     		if(curTrip.getAccepted() == 1) free = 0;
-    	}
+    	}*/
+    	
+    	free = 0;
     	
     	g.fillRect(7, 7 + ((currentSelected - 1) * (buHeight+10)), buWidth+7, buHeight+7);
     	
@@ -60,8 +63,7 @@ public class TaxiMenu {
         for (int i = 0; i < tripLIST.size(); i++) {
             curTrip = tripLIST.get(i);
         	g.drawString("ID: " + curTrip.getTripID(), 20, 30 + ((free+i) * (buHeight+10)));
-        	String lastCoord = curTrip.getCoords();
-        	g.drawString(lastCoord.substring(lastCoord.length()-11), 20, 50 + ((free+i) * (buHeight+10)));
+        	g.drawString(curTrip.getCoords(), 20, 50 + ((free+i) * (buHeight+10)));
         	g.drawString(curTrip.getTime(), 152, 30 + ((free+i) * (buHeight+10)));
         }
         

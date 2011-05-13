@@ -28,7 +28,7 @@ import java.awt.event.KeyEvent;
  */
 public class TaxiModuleGUI extends javax.swing.JFrame {
 
-    public TaxiMenuCanvas taxiMenuCanvas1;
+    public TaxiMenuCanvas taxiCanvas;
     public TaxiSide taxiSide;
     
     /** Creates new form TaxiModuleGUI */
@@ -50,7 +50,7 @@ public class TaxiModuleGUI extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        taxiMenuCanvas1 = new TaxiMenuCanvas();
+        taxiCanvas = new TaxiMenuCanvas();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,8 +74,8 @@ public class TaxiModuleGUI extends javax.swing.JFrame {
 
         jButton1.setText("Change GPS Coordinates");
 
-        javax.swing.GroupLayout gl_taxiMenuCanvas1 = new javax.swing.GroupLayout(taxiMenuCanvas1);
-        taxiMenuCanvas1.setLayout(gl_taxiMenuCanvas1);
+        javax.swing.GroupLayout gl_taxiMenuCanvas1 = new javax.swing.GroupLayout(taxiCanvas);
+        taxiCanvas.setLayout(gl_taxiMenuCanvas1);
         gl_taxiMenuCanvas1.setHorizontalGroup(
             gl_taxiMenuCanvas1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 200, Short.MAX_VALUE)
@@ -92,7 +92,7 @@ public class TaxiModuleGUI extends javax.swing.JFrame {
         			.addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addGroup(layout.createParallelGroup(Alignment.TRAILING, false)
-        				.addComponent(taxiMenuCanvas1, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(taxiCanvas, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
         				.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
         				.addComponent(jButton1, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE))
         			.addContainerGap())
@@ -105,13 +105,32 @@ public class TaxiModuleGUI extends javax.swing.JFrame {
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addComponent(jButton1)
         			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(taxiMenuCanvas1, GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE))
+        			.addComponent(taxiCanvas, GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE))
         		.addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
         );
         getContentPane().setLayout(layout);
 
         pack();
     }// </editor-fold>
+    
+    public void Accept() {
+    	String tripID = taxiCanvas.taxiMenu.tripLIST.get(taxiCanvas.taxiMenu.currentSelected-1).getTripID();
+    	if(taxiCanvas.taxiMenu.tripLIST.get(taxiCanvas.taxiMenu.currentSelected-1).getAccepted() < 1) {
+    		taxiSide.Answer('1', tripID);
+    	} else {
+    		taxiSide.Answer('2', tripID);
+    	}
+    }
+
+	public void Decline() {
+		String tripID = taxiCanvas.taxiMenu.tripLIST.get(taxiCanvas.taxiMenu.currentSelected-1).getTripID();
+    	taxiSide.Answer('3', tripID);
+	}
+
+	public void OK() {
+		String tripID = taxiCanvas.taxiMenu.tripLIST.get(taxiCanvas.taxiMenu.currentSelected-1).getTripID();
+    	taxiSide.Answer('4', tripID);
+	}
 
     /**
     * @param args the command line arguments

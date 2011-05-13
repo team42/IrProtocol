@@ -57,11 +57,11 @@ public class ApplicationLayer {
 	public void receiver(String data) {
 		System.out.println("Data received: " + data);
 		if(data.equals("UP")) {
-			tmGUI.taxiMenuCanvas1.UP();
+			tmGUI.taxiCanvas.UP();
 		} else if(data.equals("DW")) {
-			tmGUI.taxiMenuCanvas1.DW();
+			tmGUI.taxiCanvas.DW();
 		} else if(data.equals("OK")) {
-			tmGUI.taxiMenuCanvas1.OK();
+			//tmGUI.taxiMenuCanvas1.OK();
 		}
 	}	
 }
